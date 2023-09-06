@@ -8,7 +8,7 @@ class Currency{
   ///Must provide integer number of hundredths of currency such as
   ///cents, pence, CAD, AUS, etc...
   ///May provide a prefix suchas as `$`, `$ `, `CAD`, etc...
-  Currency(this.cents, {this.prefix}) 
+  Currency(this.cents, {this.prefix = ''}) 
     : this.amount = _intToString(cents.toString());
 
   ///Construct Currency from String
@@ -16,20 +16,20 @@ class Currency{
   ///Amount can be in any format as long as the numerical digits, when stripped
   ///of their non numerical counterparts represent hundredths of currency
   ///EX: `$ 1,200.99` represents 120099 cents
-  Currency.fromString(String amount, {this.prefix}) 
+  Currency.fromString(String amount, {this.prefix = ''}) 
     : this.amount = _intToString(amount.replaceAllMapped(RegExp(r'[\D]'), (Match m){return '';})),
       this.cents = int.parse(amount.replaceAllMapped(RegExp(r'[\D]'), (Match m){return '';}));
   
   
   static String _intToString(String s){
     final regRemovePad = RegExp(r'^(0*)');
-    Function matchRemovePad = (Match match) => '';
+    String Function(Match match) matchRemovePad = (Match match) => '';
     final regPad = RegExp(r'(?<!\d)(?=(\d{1,2})(?!\d))');
-    Function matchPad = (Match match) => '${match[0]}0';
+    String Function(Match match) matchPad = (Match match) => '${match[0]}0';
     final regCom = RegExp(r'(?<=\d)(?=(\d{3})+(?!\d))');
-    Function matchCom = (Match match) => '${match[0]},';
+    String Function(Match match) matchCom = (Match match) => '${match[0]},';
     final regDot = RegExp(r'(?<=\d)(?=(\d{2})(?!\d))');
-    Function matchDot = (Match match) => '${match[0]}.';
+    String Function(Match match) matchDot = (Match match) => '${match[0]}.';
     
     return s.replaceAllMapped(regRemovePad, matchRemovePad)
      .replaceAllMapped(regPad, matchPad)
@@ -77,16 +77,16 @@ class Currency{
     result = result.replaceAllMapped(
       RegExp(r'(?=[0-9]{2}\w)(?!$|[0-9]{3})((\d)(\d))'),
       (Match m){
-        if(int.parse(m[2])>1) return '${tens[int.parse(m[2])]}${units[int.parse(m[3])]}';
-        else if(int.parse(m[2])>0) return '${teens[int.parse(m[3])]}';
-        else return '${units[int.parse(m[3])]}';
+        if(int.parse(m[2]!)>1) return '${tens[int.parse(m[2]!)]}${units[int.parse(m[3]!)]}';
+        else if(int.parse(m[2]!)>0) return '${teens[int.parse(m[3]!)]}';
+        else return '${units[int.parse(m[3]!)]}';
       }
     );
     //Add a hundreds delimiter when the latest digit is not zero
     result = result.replaceAllMapped(
       RegExp(r'(\d)(?=\D{2,})'), 
       (Match m){
-        if(m[0]!='0') return '${units[int.parse(m[0])]}Hundred ';
+        if(m[0]!='0') return '${units[int.parse(m[0]!)]}Hundred ';
         else return '';
       }
     );
@@ -129,5 +129,5 @@ class Currency{
   }
 
   @override
-  String toString()=>(prefix??'') + amount;
+  String toString()=>"${prefix!=''?"$prefix ": ""} $amount}";
 }

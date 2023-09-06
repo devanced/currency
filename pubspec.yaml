@@ -1,10 +1,9 @@
 name: currency
-version: 0.0.5
-author: Dylan Modell <dylan.modell@gmail.com>
+version: 0.0.6
 homepage: https://github.com/wurst-case/currency
 repository: https://github.com/wurst-case/currency
 description: >-
   Contains code to deal with currencies.
 environment:
-  sdk: '>=2.0.0-dev.48 <3.0.0'
+  sdk: '>3.0.0'
 documentation: https://github.com/wurst-case/currency
